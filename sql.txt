@@ -1,0 +1,318 @@
+this file will have date wise sql queries
+date = 4 april
+
+<?php
+$password = "1234";
+$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+echo $hashedPassword;
+?>
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150),
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(20),
+    password VARCHAR(255),
+    role ENUM('admin','member','staff') DEFAULT 'member',
+    status ENUM('active','blocked') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_profiles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    address TEXT,
+    city VARCHAR(100),
+    state VARCHAR(100),
+    pincode VARCHAR(10),
+    dob DATE,
+    gender VARCHAR(10),
+    profile_image VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE designations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100),
+    fee DECIMAL(10,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE memberships (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    designation_id INT,
+    join_date DATE,
+    expiry_date DATE,
+    status ENUM('active','expired','blocked') DEFAULT 'active',
+    referral_code VARCHAR(50),
+    referred_by INT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (designation_id) REFERENCES designations(id),
+    FOREIGN KEY (referred_by) REFERENCES users(id)
+);
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    type ENUM('membership','donation','event','custom'),
+    reference_id INT,
+    amount DECIMAL(10,2),
+    payment_method ENUM('razorpay','payu','phonepe','cash','bank'),
+    status ENUM('pending','success','failed'),
+    transaction_id VARCHAR(150),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE donations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    campaign_id INT NULL,
+    amount DECIMAL(10,2),
+    donation_type ENUM('online','cash','custom'),
+    receipt_no VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE campaigns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    description TEXT,
+    goal_amount DECIMAL(12,2),
+    start_date DATE,
+    end_date DATE,
+    status ENUM('active','completed','closed') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE receipts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    type ENUM('membership','donation','event','custom'),
+    reference_id INT,
+    receipt_no VARCHAR(100),
+    qr_code VARCHAR(255),
+    pdf_path VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE certificates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    name VARCHAR(150),
+    type ENUM('membership','achievement','internship','visitor'),
+    template_id INT,
+    qr_code VARCHAR(255),
+    pdf_path VARCHAR(255),
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE certificate_templates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    file_path VARCHAR(255)
+);
+
+CREATE TABLE id_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    qr_code VARCHAR(255),
+    pdf_path VARCHAR(255),
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE appointment_letters (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    qr_code VARCHAR(255),
+    pdf_path VARCHAR(255),
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE news (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    content TEXT,
+    image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE activities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image VARCHAR(255),
+    caption TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE enquiries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150),
+    email VARCHAR(150),
+    phone VARCHAR(20),
+    message TEXT,
+    status ENUM('new','replied') DEFAULT 'new',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE beneficiaries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150),
+    phone VARCHAR(20),
+    address TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE beneficiary_support (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    beneficiary_id INT,
+    support_type VARCHAR(100),
+    description TEXT,
+    support_date DATE,
+    FOREIGN KEY (beneficiary_id) REFERENCES beneficiaries(id)
+);
+
+CREATE TABLE projects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE project_transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT,
+    type ENUM('income','expense'),
+    amount DECIMAL(10,2),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (project_id) REFERENCES projects(id)
+);
+
+CREATE TABLE expenses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(100),
+    amount DECIMAL(10,2),
+    expense_date DATE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    description TEXT,
+    event_date DATE,
+    fee DECIMAL(10,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE event_registrations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    event_id INT,
+    user_id INT,
+    payment_status ENUM('pending','paid'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_id) REFERENCES events(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE internships (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE internship_applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    internship_id INT,
+    user_id INT,
+    status ENUM('applied','approved','completed'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (internship_id) REFERENCES internships(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    message TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE email_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    subject VARCHAR(200),
+    status ENUM('sent','failed'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- USERS
+CREATE INDEX idx_users_email ON users(email);
+
+-- MEMBERSHIPS
+CREATE INDEX idx_memberships_user ON memberships(user_id);
+CREATE INDEX idx_memberships_referral ON memberships(referral_code);
+
+-- TRANSACTIONS
+CREATE INDEX idx_transactions_user ON transactions(user_id);
+CREATE INDEX idx_transactions_type ON transactions(type);
+CREATE INDEX idx_transactions_ref ON transactions(reference_id);
+
+-- DONATIONS
+CREATE INDEX idx_donations_user ON donations(user_id);
+CREATE INDEX idx_donations_campaign ON donations(campaign_id);
+
+-- RECEIPTS
+CREATE INDEX idx_receipts_user ON receipts(user_id);
+
+-- CERTIFICATES
+CREATE INDEX idx_certificates_user ON certificates(user_id);
+
+-- EVENTS
+CREATE INDEX idx_event_reg_user ON event_registrations(user_id);
+
+
+ALTER TABLE memberships ADD UNIQUE (referral_code);
+ALTER TABLE receipts ADD UNIQUE (receipt_no);
+ALTER TABLE transactions ADD UNIQUE (transaction_id);
+
+CREATE TABLE verifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(100) UNIQUE,
+    type ENUM('receipt','certificate','id_card'),
+    reference_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    site_name VARCHAR(150),
+    admin_email VARCHAR(150),
+    logo VARCHAR(255),
+    currency VARCHAR(10) DEFAULT 'INR',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE payment_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    transaction_id INT,
+    gateway_response TEXT,
+    status VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE users ADD deleted_at TIMESTAMP NULL;
+ALTER TABLE donations ADD deleted_at TIMESTAMP NULL;
+ALTER TABLE memberships ADD deleted_at TIMESTAMP NULL;
+
+CREATE TABLE admin_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT,
+    action TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
