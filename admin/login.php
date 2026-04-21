@@ -48,5 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <input type="hidden" name="csrf_token" value="<?php echo generateToken(); ?>">
     <button type="submit">Login</button>
 </form>
+<br>
+<a href="../register.php">register</a>
 
 <?php if(isset($error)) echo $error; ?>

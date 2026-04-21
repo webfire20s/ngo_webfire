@@ -316,3 +316,26 @@ CREATE TABLE admin_logs (
     action TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+====================================================================================================================================================================================================================
+
+
+DATE = 21 APRIL (RESUMED WORKING ON THIS)
+
+SELECT * FROM users;
+SELECT * FROM memberships;
+
+SELECT status FROM memberships;
+SELECT * FROM transactions WHERE type = 'membership';
+SELECT * FROM receipts WHERE type = 'membership';
+
+INSERT INTO designations (title, fee) VALUES
+('Member', 100.00),
+('Volunteer', 500.00),
+('Coordinator', 1000.00),
+('District Head', 2500.00),
+('State Head', 5000.00);
+
+ALTER TABLE users ADD profile_photo VARCHAR(255) DEFAULT NULL;

@@ -1,0 +1,49 @@
+for today (21 april)
+
+🚀 PHASE 2 — MEMBERSHIP SYSTEM (CORE MODULE)
+
+This is the heart of your NGO system.
+Everything connects to this:
+
+Donations
+Referrals       ✅
+Certificates       ✅
+Transactions       ✅
+⚙️ FLOW WE WILL BUILD (IMPORTANT)
+
+We will follow professional paid membership flow (Option A):
+
+✅ Final Flow:
+User registers           ✅
+Membership created (inactive/pending)      ✅
+User pays fee      ✅
+Membership becomes active      ✅
+Receipt generated      ✅
+
+PHASE 5 — CERTIFICATE GENERATION SYSTEM      ✅
+
+This is a high-impact feature:        ✅
+
+Adds credibility to your NGO
+Gives users something tangible
+Looks premium to clients
+🧠 WHAT WE WILL BUILD
+
+Each active member can:
+
+Download certificate       ✅
+Certificate includes:      ✅
+Name        ✅
+Designation       ✅
+Membership ID / Code       ✅
+Issue date         ✅
+QR for verification        ✅
+
+
+We’ll build a clean, printable ID card (front side) with:         ✅
+
+Name        ✅
+Designation        ✅
+Member ID        ✅
+QR verification        ✅
+NGO branding        ✅

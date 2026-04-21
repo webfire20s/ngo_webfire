@@ -5,8 +5,14 @@
     <a href="#">Donations</a><br>
     <a href="#">Campaigns</a><br>
     <a href="#">Certificates</a><br>
+    <hr>
+
+    <h3>Export Reports</h3>
+
+    <a href="export_transactions.php">Download Transactions CSV</a><br><br>
+    <a href="export_members.php">Download Members CSV</a>
     <br>
-    <a href="/auto-ngo/admin/logout.php">Logout</a>
+    <a href="../admin/logout.php">Logout</a>
 </div>
 
 <div style="margin-left:220px;">
