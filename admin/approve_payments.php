@@ -88,6 +88,15 @@ if (isset($_GET['approve'])) {
         echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
     }
 }
+if (isset($_GET['reject'])) {
+
+    $id = (int) $_GET['reject'];
+
+    $stmt = $pdo->prepare("UPDATE transactions SET status='failed' WHERE id=? AND status='pending'");
+    $stmt->execute([$id]);
+
+    echo "<p style='color:red;'>Payment Rejected</p>";
+}
 ?>
 
 <h2>Pending Payments</h2>
@@ -97,7 +106,9 @@ if (isset($_GET['approve'])) {
     <th>User</th>
     <th>UTR</th>
     <th>Amount</th>
-    <th>Membership Status</th>
+    <th>Method</th>
+    <th>Proof</th>
+    <th>Status</th>
     <th>Action</th>
 </tr>
 
@@ -106,11 +117,29 @@ if (isset($_GET['approve'])) {
     <td><?php echo htmlspecialchars($p['name']); ?></td>
     <td><?php echo htmlspecialchars($p['transaction_id']); ?></td>
     <td>₹<?php echo $p['amount']; ?></td>
+    <td><?php echo strtoupper($p['payment_method']); ?></td>
+
+    <td>
+        <?php if (!empty($p['proof'])): ?>
+            <a href="../uploads/payments/<?php echo $p['proof']; ?>" target="_blank">
+                View
+            </a>
+        <?php else: ?>
+            No Proof
+        <?php endif; ?>
+    </td>
+
     <td><?php echo $p['membership_status']; ?></td>
+
     <td>
         <a href="?approve=<?php echo $p['id']; ?>" 
            onclick="return confirm('Approve this payment?')">
-           Approve
+           ✅ Approve
+        </a>
+        |
+        <a href="?reject=<?php echo $p['id']; ?>" 
+           onclick="return confirm('Reject this payment?')">
+           ❌ Reject
         </a>
     </td>
 </tr>

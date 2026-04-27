@@ -4,14 +4,18 @@ require 'includes/db.php';
 require 'includes/fpdf/fpdf.php';
 require 'includes/phpqrcode/qrlib.php';
 
-$receipt_id = $_GET['id'];
+$receipt_id = $_GET['id'] ?? null;
+
+if (!$receipt_id) {
+    die("Invalid request");
+}
 
 /* FETCH RECEIPT DATA */
 $stmt = $pdo->prepare("
     SELECT r.*, u.name, u.email, t.amount
     FROM receipts r
     JOIN users u ON r.user_id = u.id
-    JOIN transactions t ON t.reference_id = r.reference_id AND t.type='membership'
+    JOIN transactions t ON t.reference_id = r.reference_id AND t.type='membership'AND t.status='success'
     WHERE r.id = ?
 ");
 $stmt->execute([$receipt_id]);

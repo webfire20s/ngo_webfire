@@ -16,11 +16,15 @@ $membership_id = $_GET['membership_id'];
 
 <hr>
 
-<form method="POST" action="submit_payment.php">
+<form method="POST" action="submit_payment.php" enctype="multipart/form-data">
+    
     <input type="hidden" name="membership_id" value="<?php echo $membership_id; ?>">
 
     Enter UTR / Transaction ID:<br>
     <input type="text" name="utr" required><br><br>
+
+    Upload Payment Screenshot:<br>
+    <input type="file" name="proof" accept="image/*" required><br><br>
 
     <button type="submit">Submit Payment</button>
 </form>

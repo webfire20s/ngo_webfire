@@ -11,6 +11,16 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+/* CHECK EXISTING ID CARD */
+$stmt = $pdo->prepare("SELECT * FROM certificates WHERE user_id=? AND type='id_card' LIMIT 1");
+$stmt->execute([$user_id]);
+$existing = $stmt->fetch();
+
+if ($existing && !empty($existing['pdf_path'])) {
+    header("Location: " . $existing['pdf_path']);
+    exit;
+}
+
 /* FETCH MEMBER DATA */
 $stmt = $pdo->prepare("
     SELECT u.name, u.email, u.profile_photo, m.referral_code, d.title, m.status
@@ -30,8 +40,12 @@ if (!$data || $data['status'] !== 'active') {
 /* QR LINK */
 $verify_url = "http://localhost/AUTONGO/verify_certificate.php?user=" . $user_id;
 
-$qr_file = "uploads/id_qr_" . $user_id . ".png";
+$qr_file = "uploads/id_cards/qr_" . time() . "_" . $user_id . ".png";
+
+$verify_url = "http://localhost/AUTONGO/verify_id.php?user=" . $user_id;
+
 QRcode::png($verify_url, $qr_file);
+
 
 /* CREATE SMALL ID CARD PDF */
 /* CREATE ID CARD */
@@ -115,4 +129,24 @@ $pdf->SetFont('Arial', 'I', 6);
 $pdf->SetXY(5, 48);
 $pdf->Cell(76, 3, 'Together We Can Make A Difference', 0, 0, 'C');
 
-$pdf->Output();
+$pdf_path = "uploads/id_cards/id_" . time() . "_" . $user_id . ".pdf";
+
+/* SAVE FILE */
+$pdf->Output('F', $pdf_path);
+
+$id_no = 'ID' . time();
+
+$pdo->prepare("
+    INSERT INTO certificates 
+    (user_id, name, type, template_id, qr_code, pdf_path, certificate_no)
+    VALUES (?, ?, 'id_card', 2, ?, ?, ?)
+")->execute([
+    $user_id,
+    $data['name'],
+    $qr_file,
+    $pdf_path,
+    $id_no
+]);
+
+/* SHOW TO USER */
+$pdf->Output('I');

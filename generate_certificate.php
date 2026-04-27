@@ -30,9 +30,18 @@ if (!$data || $data['status'] !== 'active') {
 /* QR LINK */
 $verify_url = "http://localhost/AUTONGO/verify_certificate.php?user=" . $user_id;
 
-$qr_file = "uploads/cert_qr_" . $user_id . ".png";
+$qr_file = "uploads/certificates/qr_" . time() . "_" . $user_id . ".png";
 QRcode::png($verify_url, $qr_file);
+/* CHECK IF CERTIFICATE ALREADY EXISTS */
+$stmt = $pdo->prepare("SELECT * FROM certificates WHERE user_id = ? AND type='membership' LIMIT 1");
+$stmt->execute([$user_id]);
+$existing = $stmt->fetch();
 
+if ($existing && !empty($existing['pdf_path'])) {
+    /* DIRECT DOWNLOAD EXISTING */
+    header("Location: " . $existing['pdf_path']);
+    exit;
+}
 /* CREATE PDF */
 /* CREATE PDF */
 $pdf = new FPDF('L', 'mm', 'A4');
@@ -102,4 +111,23 @@ $pdf->Cell(60, 8, 'Authorized Signatory', 0, 1, 'C');
 /* QR (fixed position) */
 $pdf->Image($qr_file, 230, 120, 35, 35);
 
-$pdf->Output();
+$pdf_path = "uploads/certificates/cert_" . time() . "_" . $user_id . ".pdf";
+
+/* SAVE FILE */
+$pdf->Output('F', $pdf_path);
+$certificate_no = 'CERT' . time();
+
+$pdo->prepare("
+    INSERT INTO certificates 
+    (user_id, name, type, template_id, qr_code, pdf_path, certificate_no)
+    VALUES (?, ?, 'membership', 1, ?, ?, ?)
+")->execute([
+    $user_id,
+    $data['name'],
+    $qr_file,
+    $pdf_path,
+    $certificate_no
+]);
+
+/* ALSO SHOW TO USER */
+$pdf->Output('I');

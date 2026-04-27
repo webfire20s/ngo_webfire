@@ -47,3 +47,122 @@ Designation        ✅
 Member ID        ✅
 QR verification        ✅
 NGO branding        ✅
+
+
+
+
+
+==============================================================================================================================================================================================================================================================================================================================
+
+date = 22 april 
+
+REALISTIC PRIORITY ORDER (IMPORTANT)
+
+Do NOT do randomly. Follow this:
+
+🔥 PHASE NEXT (MANDATORY)
+Forgot Password          ✅
+Email System         ✅
+Payment Proof Upload        ✅       
+🚀 THEN
+User Management         ✅
+Filters
+Charts
+💎 FINAL POLISH
+ID Card back side
+Excel export
+Deployment
+
+
+
+FORGOT PASSWORD SYSTEM (COMPLETE FLOW)
+🔁 Flow:
+User enters email      ✅
+System generates secure token       ✅
+Token stored in DB (with expiry)        ✅
+Email sent with reset link        ✅
+User sets new password        ✅
+
+
+
+We’ll build a professional-grade Transactions Module with:
+
+Full transaction history (not just pending)       ✅      
+Filters (status, date, method)           ✅
+Proof preview         ✅
+Clean structure for future expansion         ✅
+
+🧠 FEATURES WE WILL INCLUDE        ✅
+
+✔ View all transactions       ✅
+✔ Filter by:           ✅
+
+Status (pending/success/failed)         ✅
+Payment method          ✅
+Date range          ✅
+✔ Proof viewing       ✅
+✔ Linked membership info          ✅
+
+
+
+
+
+“start receipts module”            ✅      
+
+We’ll build:
+
+Receipt listing            ✅
+Search            ✅
+Re-download system             ✅
+Proper admin visibility           ✅
+
+🧠 ASSUMPTION (BASED ON YOUR SYSTEM)
+
+Your receipts table likely has:   ✅
+
+id
+user_id
+type (membership)
+reference_id
+receipt_no
+created_at
+
+(If created_at missing → we’ll fix later)
+
+
+
+“start certificates module”      ✅
+🚀 CERTIFICATES MODULE (PROPER SYSTEM)          ✅
+🧠 WHAT WE WILL BUILD
+
+✔ Store every issued certificate       ✅
+✔ Track:        ✅
+
+User      ✅
+Membership        ✅
+Issue date         ✅
+✔ Admin panel:         ✅
+View all certificates         ✅
+Re-download         ✅
+Search           ✅
+
+
+
+🚀 ID CARD TRACKING MODULE (PROPER IMPLEMENTATION)      ✅
+
+You already have a strong certificates table.             ✅
+We’ll reuse it instead of creating a new table.
+
+👉 Just treat ID cards as:
+
+type = 'id_card'            ✅
+🧠 WHAT WE WILL BUILD
+
+✔ Store ID cards (PDF)         ✅
+✔ Prevent duplicate generation         ✅
+✔ Save QR + PDF path            ✅
+✔ Admin panel listing                ✅
+✔ Re-download system           ✅
+
+
+
