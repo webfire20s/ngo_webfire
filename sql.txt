@@ -371,6 +371,30 @@ UPDATE certificates
 SET type = 'id_card' 
 WHERE template_id = 2;
 
+====================================================================================================================================================================================================================================================================================================================================
+
+DATE = 28 APRIL 
 
 
-DATE = 27 APRIL 
+ALTER TABLE donations
+ADD donor_name VARCHAR(100) AFTER user_id,
+ADD donor_email VARCHAR(150) NULL,
+ADD donor_phone VARCHAR(20) NULL,
+ADD transaction_id VARCHAR(100) NULL,
+ADD proof VARCHAR(255) NULL,
+ADD status ENUM('pending','success','failed') DEFAULT 'pending',
+ADD payment_method ENUM('upi','bank','cash') DEFAULT 'upi';
+
+ALTER TABLE donations MODIFY user_id INT NULL;
+
+ALTER TABLE receipts
+ADD amount DECIMAL(10,2) AFTER receipt_no,
+ADD payment_method VARCHAR(50) AFTER amount;
+
+
+DELETE FROM receipts WHERE amount = 0;
+
+
+
+ALTER TABLE campaigns 
+ADD collected_amount DECIMAL(12,2) DEFAULT 0 AFTER goal_amount;

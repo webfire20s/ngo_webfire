@@ -12,10 +12,15 @@ if (!$receipt_id) {
 
 /* FETCH RECEIPT DATA */
 $stmt = $pdo->prepare("
-    SELECT r.*, u.name, u.email, t.amount
+    SELECT r.*, 
+           u.name AS user_name,
+           u.email,
+           d.donor_name,
+           d.donor_email
     FROM receipts r
-    JOIN users u ON r.user_id = u.id
-    JOIN transactions t ON t.reference_id = r.reference_id AND t.type='membership'AND t.status='success'
+    LEFT JOIN users u ON r.user_id = u.id
+    LEFT JOIN donations d 
+        ON r.reference_id = d.id AND r.type='donation'
     WHERE r.id = ?
 ");
 $stmt->execute([$receipt_id]);
@@ -24,6 +29,18 @@ $data = $stmt->fetch();
 if (!$data) {
     die("Invalid receipt");
 }
+
+/* DECIDE VALUES */
+$name = ($data['type'] === 'donation') 
+        ? ($data['donor_name'] ?? 'Guest') 
+        : $data['user_name'];
+
+$email = ($data['type'] === 'donation') 
+        ? ($data['donor_email'] ?? '-') 
+        : $data['email'];
+
+$amount = $data['amount'];
+$method = $data['payment_method'];
 
 /* QR CONTENT (verification link) */
 $verify_url = "http://localhost/AUTONGO/verify_receipt.php?id=" . $receipt_id;
@@ -43,9 +60,10 @@ $pdf->Ln(10);
 
 $pdf->SetFont('Arial', '', 12);
 
-$pdf->Cell(0, 10, "Name: " . $data['name'], 0, 1);
-$pdf->Cell(0, 10, "Email: " . $data['email'], 0, 1);
-$pdf->Cell(0, 10, "Amount: Rs. " . $data['amount'], 0, 1);
+$pdf->Cell(0, 10, "Name: " . $name, 0, 1);
+$pdf->Cell(0, 10, "Email: " . $email, 0, 1);
+$pdf->Cell(0, 10, "Amount: Rs. " . $amount, 0, 1);
+$pdf->Cell(0, 10, "Method: " . strtoupper($method), 0, 1);
 $pdf->Cell(0, 10, "Receipt No: " . $data['receipt_no'], 0, 1);
 
 $pdf->Ln(10);

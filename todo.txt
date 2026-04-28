@@ -166,3 +166,10 @@ type = 'id_card'            ✅
 
 
 
+🚀 DONATIONS MODULE (BACKEND-FIRST, PRODUCTION READY)
+🧠 What we’ll cover (now)
+DB schema (donations + optional campaigns hook)
+Public donation form (basic)
+Payment capture (UTR + proof, like memberships)
+Admin: approve/reject + full listing
+Receipt creation (reuse your existing receipts system)

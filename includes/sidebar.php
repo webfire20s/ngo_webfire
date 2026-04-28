@@ -6,8 +6,9 @@
     <a href="pay_membership.php">CASH payments</a><br>
     <a href="transactions.php">Transactions</a><br>
     <a href="receipts.php">Receipts</a><br>
-    <a href="#">Donations</a><br>
-    <a href="#">Campaigns</a><br>
+    <a href="donations.php">Donations</a><br>
+    <a href="campaigns.php">Campaigns</a><br>
+    <a href="create_campaign.php">Create Campaigns</a><br>
     <a href="id_cards.php">ID Cards</a><br>
     <a href="certificates.php">Certificates</a><br>
     <hr>
