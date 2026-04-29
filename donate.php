@@ -1,6 +1,8 @@
 <?php
 session_start(); 
 require 'includes/db.php';
+include 'includes/header.php';
+include 'includes/navbar.php';
 $campaigns = $pdo->query("
     SELECT id, title 
     FROM campaigns 
@@ -43,3 +45,5 @@ $selected_campaign = $_GET['campaign_id'] ?? '';
 
     <button type="submit">Donate</button>
 </form>
+
+<?php include 'includes/web_footer.php'; ?>

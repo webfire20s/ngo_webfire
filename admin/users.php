@@ -1,7 +1,7 @@
 <?php
 require '../includes/middleware_admin.php';
 require '../includes/db.php';
-require '../includes/header.php';
+require '../includes/admin_header.php';
 require '../includes/sidebar.php';
 
 /* SEARCH */

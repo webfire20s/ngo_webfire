@@ -1,8 +1,7 @@
-<?php
-?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Panel</title>
+    <title>NGO Website</title>
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>

@@ -1,5 +1,7 @@
 <?php
 require 'includes/db.php';
+include 'includes/header.php';
+include 'includes/navbar.php';
 
 /* FETCH ACTIVE CAMPAIGNS */
 $campaigns = $pdo->query("
@@ -55,3 +57,5 @@ $campaigns = $pdo->query("
 <?php endforeach; ?>
 
 </div>
+
+<?php include 'includes/web_footer.php'; ?>

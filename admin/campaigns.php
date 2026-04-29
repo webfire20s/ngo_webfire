@@ -1,6 +1,7 @@
 <?php
 require '../includes/middleware_admin.php';
 require '../includes/db.php';
+require '../includes/admin_header.php';
 require '../includes/sidebar.php';
 
 $campaigns = $pdo->query("SELECT * FROM campaigns ORDER BY id DESC")->fetchAll();

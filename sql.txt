@@ -398,3 +398,4 @@ DELETE FROM receipts WHERE amount = 0;
 
 ALTER TABLE campaigns 
 ADD collected_amount DECIMAL(12,2) DEFAULT 0 AFTER goal_amount;
+
