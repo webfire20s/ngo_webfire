@@ -2,6 +2,8 @@
 session_start();
 require 'includes/db.php';
 require 'includes/functions.php';
+include 'includes/header.php'; 
+include 'includes/navbar.php'; 
 
 /* FETCH DESIGNATIONS */
 $designations = $pdo->query("SELECT * FROM designations")->fetchAll();
@@ -152,3 +154,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <button type="submit">Register</button>
 </form>
+
+<?php include 'includes/web_footer.php'; ?>
