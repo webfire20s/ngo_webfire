@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="w-full bg-black text-white px-12 py-5 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-gray-800 transition-all shadow-2xl shadow-black/10">
                         Complete Registration
                     </button>
-                    <p class="text-center mt-6 text-xs text-gray-400">Already a member? <a href="login.php" class="text-black font-bold">Sign In</a></p>
+                    <p class="text-center mt-6 text-xs text-gray-400">Already a member? <a href="admin/login.php" class="text-black font-bold">Sign In</a></p>
                 </div>
             </form>
 

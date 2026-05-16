@@ -51,73 +51,168 @@ $referrers = $pdo->query("
 ")->fetchAll();
 ?>
 
-<h1>Admin Dashboard</h1>
+<!-- Main Content Area Container -->
+<div class="space-y-8">
+    
+    <!-- Dashboard Header -->
+    <header class="border-b border-slate-200 pb-5">
+        <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">Management Dashboard</span>
+        <h1 class="text-3xl font-light tracking-tight text-slate-900 mt-1">Admin Overview</h1>
+    </header>
 
-<hr>
+    <!-- Overview Metrics Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Metric Card 1 -->
+        <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Users</span>
+            <div class="flex items-baseline gap-2 mt-2">
+                <span class="text-3xl font-semibold text-slate-900"><?php echo $totalUsers; ?></span>
+                <span class="text-xs text-slate-400 font-medium">registered</span>
+            </div>
+        </div>
 
-<h3>Overview</h3>
+        <!-- Metric Card 2 -->
+        <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Active Members</span>
+            <div class="flex items-baseline gap-2 mt-2">
+                <span class="text-3xl font-semibold text-emerald-600"><?php echo $activeMembers; ?></span>
+                <span class="text-xs text-emerald-500 font-medium bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">live access</span>
+            </div>
+        </div>
 
-<p>Total Users: <b><?php echo $totalUsers; ?></b></p>
-<p>Active Members: <b><?php echo $activeMembers; ?></b></p>
-<p>Total Donations: <b>₹<?php echo $totalDonations ?? 0; ?></b></p>
-<p>Total Revenue (Membership): <b>₹<?php echo $totalRevenue ?? 0; ?></b></p>
+        <!-- Metric Card 3 -->
+        <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Donations</span>
+            <div class="mt-2">
+                <span class="text-3xl font-semibold text-slate-900">₹<?php echo $totalDonations ?? 0; ?></span>
+            </div>
+        </div>
 
-<hr>
+        <!-- Metric Card 4 -->
+        <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Revenue</span>
+            <div class="flex items-baseline gap-1 mt-2">
+                <span class="text-3xl font-semibold text-slate-900">₹<?php echo $totalRevenue ?? 0; ?></span>
+                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider pl-1">Membership</span>
+            </div>
+        </div>
+    </div>
 
-<h3>Payment Methods</h3>
+    <!-- Multi-Column Tables Row Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        
+        <!-- Left Side: Recent Transactions (Takes up 2 columns on desktops) -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
+                <div class="p-5 border-b border-slate-100">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Recent Transactions</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] uppercase tracking-wider text-slate-400">
+                                <th class="py-3 px-5 font-bold">Name</th>
+                                <th class="py-3 px-5 font-bold">Amount</th>
+                                <th class="py-3 px-5 font-bold">Method</th>
+                                <th class="py-3 px-5 font-bold text-right">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                            <?php if (empty($transactions)): ?>
+                                <tr>
+                                    <td colspan="4" class="py-6 px-5 text-center text-slate-400 italic">No transactions captured.</td>
+                                    </tr>
+                            <?php else: ?>
+                                <?php foreach ($transactions as $t): ?>
+                                <tr class="hover:bg-slate-50/40 transition-colors duration-150">
+                                    <td class="py-3.5 px-5 font-medium text-slate-900"><?php echo htmlspecialchars($t['name']); ?></td>
+                                    <td class="py-3.5 px-5 font-semibold text-slate-800">₹<?php echo $t['amount']; ?></td>
+                                    <td class="py-3.5 px-5">
+                                        <span class="font-mono text-[11px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded text-slate-600">
+                                            <?php echo strtoupper($t['payment_method']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-5 text-right font-mono text-xs text-slate-400"><?php echo $t['created_at']; ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-<table border="1" cellpadding="8">
-<tr>
-    <th>Method</th>
-    <th>Total Transactions</th>
-</tr>
+        <!-- Right Side: Metrics Breakdown Columns (Takes up 1 column) -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Payment Methods Card -->
+            <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
+                <div class="p-5 border-b border-slate-100">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Payment Methods</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] uppercase tracking-wider text-slate-400">
+                                <th class="py-3 px-5 font-bold">Method</th>
+                                <th class="py-3 px-5 font-bold text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                            <?php if (empty($methods)): ?>
+                                <tr>
+                                    <td colspan="2" class="py-6 px-5 text-center text-slate-400 italic">No breakdown available.</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($methods as $m): ?>
+                                <tr class="hover:bg-slate-50/40 transition-colors duration-150">
+                                    <td class="py-3 px-5 font-mono text-xs text-slate-700"><?php echo strtoupper($m['payment_method']); ?></td>
+                                    <td class="py-3 px-5 text-right font-semibold text-slate-900"><?php echo $m['total']; ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<?php foreach ($methods as $m): ?>
-<tr>
-    <td><?php echo strtoupper($m['payment_method']); ?></td>
-    <td><?php echo $m['total']; ?></td>
-</tr>
-<?php endforeach; ?>
-</table>
+            <!-- Top Referrers Card -->
+            <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
+                <div class="p-5 border-b border-slate-100">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Top Referrers</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] uppercase tracking-wider text-slate-400">
+                                <th class="py-3 px-5 font-bold">Name</th>
+                                <th class="py-3 px-5 font-bold text-right">Referrals</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                            <?php if (empty($referrers)): ?>
+                                <tr>
+                                    <td colspan="2" class="py-6 px-5 text-center text-slate-400 italic">No referral data.</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($referrers as $r): ?>
+                                <tr class="hover:bg-slate-50/40 transition-colors duration-150">
+                                    <td class="py-3 px-5 font-medium text-slate-900"><?php echo htmlspecialchars($r['name']); ?></td>
+                                    <td class="py-3 px-5 text-right font-semibold text-emerald-600"><?php echo $r['total']; ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-<hr>
+        </div>
+    </div>
 
-<h3>Recent Transactions</h3>
+</div>
 
-<table border="1" cellpadding="8">
-<tr>
-    <th>Name</th>
-    <th>Amount</th>
-    <th>Method</th>
-    <th>Date</th>
-</tr>
-
-<?php foreach ($transactions as $t): ?>
-<tr>
-    <td><?php echo htmlspecialchars($t['name']); ?></td>
-    <td>₹<?php echo $t['amount']; ?></td>
-    <td><?php echo strtoupper($t['payment_method']); ?></td>
-    <td><?php echo $t['created_at']; ?></td>
-</tr>
-<?php endforeach; ?>
-</table>
-
-<hr>
-
-<h3>Top Referrers</h3>
-
-<table border="1" cellpadding="8">
-<tr>
-    <th>Name</th>
-    <th>Total Referrals</th>
-</tr>
-
-<?php foreach ($referrers as $r): ?>
-<tr>
-    <td><?php echo htmlspecialchars($r['name']); ?></td>
-    <td><?php echo $r['total']; ?></td>
-</tr>
-<?php endforeach; ?>
-</table>
+</div> <!-- Closes inner sidebar layout padding container -->
+</div> <!-- Closes outer fixed sidebar layout grid width container -->
 
 <?php require '../includes/footer.php'; ?>

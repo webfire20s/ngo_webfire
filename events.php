@@ -1,6 +1,8 @@
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/navbar.php'; ?>
-
+<?php
+require 'includes/db.php';
+include 'includes/header.php';
+include 'includes/navbar.php';
+?>
 <!-- 1. Page Header -->
 <section class="pt-32 pb-16 bg-white">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
@@ -12,61 +14,133 @@
     </div>
 </section>
 
-<!-- 2. Events Content Area -->
+<?php
+$events = $pdo->query("
+    SELECT * FROM events
+    WHERE status='upcoming'
+    ORDER BY event_date ASC
+")->fetchAll();
+?>
+
 <section class="py-12 bg-white pb-32">
+
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        
-        <!-- Logic for "No Events" - Styled as a Cinematic Empty State -->
+
+        <?php if(count($events) > 0): ?>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+
+            <?php foreach($events as $event): ?>
+
+            <div class="group" data-aos="fade-up">
+
+                <!-- IMAGE -->
+                <div class="aspect-video rounded-3xl overflow-hidden mb-6 bg-gray-100 relative">
+
+                    <?php if(!empty($event['featured_image'])): ?>
+
+                        <img 
+                            src="uploads/events/<?php echo $event['featured_image']; ?>"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                        >
+
+                    <?php else: ?>
+
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                            No Image
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+
+                <!-- DATE -->
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3 font-bold">
+                    <?php echo date('d M Y', strtotime($event['event_date'])); ?>
+                </p>
+
+                <!-- TITLE -->
+                <h3 class="text-2xl font-bold brand-font mb-4 leading-tight">
+                    <?php echo htmlspecialchars($event['title']); ?>
+                </h3>
+
+                <!-- SHORT DESC -->
+                <p class="text-gray-500 leading-relaxed font-light mb-6">
+                    <?php echo htmlspecialchars($event['short_description']); ?>
+                </p>
+
+                <!-- DETAILS -->
+                <div class="space-y-2 mb-6">
+
+                    <?php if(!empty($event['event_time'])): ?>
+                    <p class="text-sm text-gray-600">
+                        <strong>Time:</strong>
+                        <?php echo htmlspecialchars($event['event_time']); ?>
+                    </p>
+                    <?php endif; ?>
+
+                    <?php if(!empty($event['location'])): ?>
+                    <p class="text-sm text-gray-600">
+                        <strong>Location:</strong>
+                        <?php echo htmlspecialchars($event['location']); ?>
+                    </p>
+                    <?php endif; ?>
+
+                </div>
+
+                <!-- FULL DETAILS -->
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+
+                    <p class="text-sm text-gray-600 leading-loose">
+                        <?php echo nl2br(htmlspecialchars($event['full_description'])); ?>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <?php endforeach; ?>
+
+        </div>
+
+        <?php else: ?>
+
+        <!-- EMPTY STATE -->
+
         <div class="relative overflow-hidden rounded-[3rem] bg-gray-50 border border-gray-100 p-12 md:p-24 text-center" data-aos="zoom-in">
-            <!-- Decorative Background Watermark -->
+
             <div class="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none pointer-events-none">
                 <span class="text-[15rem] font-bold brand-font">SOON</span>
             </div>
 
             <div class="relative z-10 max-w-md mx-auto">
+
                 <div class="w-20 h-20 bg-white rounded-3xl shadow-sm flex items-center justify-center mx-auto mb-8">
                     <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold brand-font mb-4">No events available currently.</h2>
+
+                <h2 class="text-2xl font-bold brand-font mb-4">
+                    No events available currently.
+                </h2>
+
                 <p class="text-gray-500 font-light leading-relaxed mb-8">
-                    We are currently planning our next phase of community initiatives. Stay tuned for updates on workshops, fundraisers, and social gatherings.
+                    We are currently planning our next phase of community initiatives.
                 </p>
+
                 <a href="contact.php" class="inline-block bg-black text-white px-10 py-4 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-gray-800 transition">
                     Inquire About Hosting
                 </a>
-            </div>
-        </div>
 
-        <!-- 3. "Coming Soon" Categories (Added to fill the page) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
-            <div class="group" data-aos="fade-up" data-aos-delay="100">
-                <div class="aspect-video rounded-2xl overflow-hidden mb-6 bg-gray-100">
-                    <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=2070" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
-                </div>
-                <h3 class="text-lg font-bold brand-font">Community Workshops</h3>
-                <p class="text-xs text-gray-400 uppercase tracking-widest mt-2">Coming Q3 2026</p>
-            </div>
-            
-            <div class="group" data-aos="fade-up" data-aos-delay="200">
-                <div class="aspect-video rounded-2xl overflow-hidden mb-6 bg-gray-100">
-                    <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?q=80&w=2070" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
-                </div>
-                <h3 class="text-lg font-bold brand-font">Annual Fundraisers</h3>
-                <p class="text-xs text-gray-400 uppercase tracking-widest mt-2">Coming Q4 2026</p>
             </div>
 
-            <div class="group" data-aos="fade-up" data-aos-delay="300">
-                <div class="aspect-video rounded-2xl overflow-hidden mb-6 bg-gray-100">
-                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
-                </div>
-                <h3 class="text-lg font-bold brand-font">Volunteer Meetups</h3>
-                <p class="text-xs text-gray-400 uppercase tracking-widest mt-2">Monthly Updates</p>
-            </div>
         </div>
+
+        <?php endif; ?>
 
     </div>
+
 </section>
 
 <!-- 4. Global Invitation CTA -->

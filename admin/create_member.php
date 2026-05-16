@@ -25,7 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $check->execute([$email]);
 
     if ($check->fetch()) {
-        echo "<p style='color:red;'>Email already exists</p>";
+        echo '
+        <div class="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-sm font-medium flex items-center gap-2 shadow-sm animate-fade-in">
+            <span class="text-base">✕</span> Registration Error: Email address already exists inside the database registry.
+        </div>';
     } else {
 
         /* CREATE USER */
@@ -68,38 +71,115 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         logAdminAction($pdo, $_SESSION['user_id'], "Created member: $email");
 
-        echo "<p style='color:green;'>Member created successfully (Pending Payment)</p>";
+        echo '
+        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium flex items-center gap-2 shadow-sm animate-fade-in">
+            <span class="text-base">✓</span> Member baseline account generated successfully. Status set to: Pending Payment.
+        </div>';
     }
 }
 ?>
 
-<h2>Create Member</h2>
+<!-- Main Content Area Container -->
+<div class="space-y-6 max-w-4xl">
 
-<form method="POST">
-    <input type="hidden" name="csrf_token" value="<?php echo generateToken(); ?>">
+    <!-- Header Block -->
+    <header class="border-b border-slate-200 pb-5">
+        <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">Onboarding Framework</span>
+        <h1 class="text-3xl font-light tracking-tight text-slate-900 mt-1">Create Member</h1>
+    </header>
 
-    Name:<br>
-    <input type="text" name="name" required><br><br>
+    <!-- User Registration Input Card -->
+    <div class="bg-white border border-slate-200/80 rounded-xl shadow-sm p-6 sm:p-8">
+        <form method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?php echo generateToken(); ?>">
+            
+            <!-- Dual Column Layout: Personal Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Full Legal Name Input -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        Full Legal Name <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="name" required 
+                           class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white transition-all shadow-inner placeholder-slate-400"
+                           placeholder="Name">
+                </div>
 
-    Email:<br>
-    <input type="email" name="email" required><br><br>
+                <!-- Primary Email Communications Address -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        Primary Email Address <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="email" name="email" required 
+                           class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white transition-all shadow-inner placeholder-slate-400"
+                           placeholder="email@domain.com">
+                </div>
 
-    Phone:<br>
-    <input type="text" name="phone" required><br><br>
+            </div>
 
-    Designation:<br>
-    <select name="designation_id" required>
-        <?php foreach ($designations as $d): ?>
-            <option value="<?php echo $d['id']; ?>">
-                <?php echo $d['title']; ?> (₹<?php echo $d['fee']; ?>)
-            </option>
-        <?php endforeach; ?>
-    </select><br><br>
+            <!-- Dual Column Layout: Categorization Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Telephone / Contact Number -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        Mobile / Telephone Number <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" name="phone" required 
+                           class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white transition-all shadow-inner placeholder-slate-400"
+                           placeholder="+91 XXXXX XXXXX">
+                </div>
 
-    Referral Code (optional):<br>
-    <input type="text" name="referral"><br><br>
+                <!-- Strategic Affiliation Level Assignment -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                        Tier Designation Rank <span class="text-rose-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <select name="designation_id" required
+                                class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white transition-all appearance-none shadow-inner cursor-pointer">
+                            <?php foreach ($designations as $d): ?>
+                                <option value="<?php echo $d['id']; ?>">
+                                    <?php echo htmlspecialchars($d['title']); ?> (₹<?php echo number_format($d['fee'], 2); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                            <span class="text-xs">▼</span>
+                        </div>
+                    </div>
+                </div>
 
-    <button type="submit">Create Member</button>
-</form>
+            </div>
+
+            <!-- Optional Referral Track Framework -->
+            <div class="max-w-md">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                    Inbound Affiliate Referral Code <span class="text-slate-400 font-normal lowercase italic">(optional)</span>
+                </label>
+                <input type="text" name="referral" 
+                       class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-mono tracking-wider text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white transition-all shadow-inner placeholder-slate-400 uppercase"
+                       placeholder="e.g., A8F3B9D1">
+            </div>
+
+            <!-- Execution Actions Footbar -->
+            <div class="pt-5 border-t border-slate-100 flex items-center justify-between">
+                <p class="text-xs text-slate-400">
+                    * Default fallback initialization password will map securely to <span class="font-mono bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded text-slate-600">123456</span>
+                </p>
+                <button type="submit" 
+                        class="px-6 py-2.5 text-sm font-bold tracking-wide uppercase text-white bg-slate-900 hover:bg-slate-800 active:bg-black rounded-lg transition-colors duration-150 shadow-md">
+                    Register Member
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+</div> <!-- Closes inner sidebar layout padding container -->
+</div> <!-- Closes outer fixed sidebar layout grid width container -->
 
 <?php require '../includes/footer.php'; ?>

@@ -1,6 +1,46 @@
-<?php 
-include 'includes/header.php'; 
-include 'includes/navbar.php'; 
+<?php
+require 'includes/db.php';
+
+$success = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone']);
+    $message = trim($_POST['message']);
+
+    if (
+        !empty($name) &&
+        !empty($email) &&
+        !empty($phone) &&
+        !empty($message)
+    ) {
+
+        $stmt = $pdo->prepare("
+            INSERT INTO enquiries
+            (
+                name,
+                email,
+                phone,
+                message
+            )
+            VALUES (?, ?, ?, ?)
+        ");
+
+        $stmt->execute([
+            $name,
+            $email,
+            $phone,
+            $message
+        ]);
+
+        $success = true;
+    }
+}
+
+include 'includes/header.php';
+include 'includes/navbar.php';
 ?>
 
 <!-- 1. Editorial Header -->
@@ -48,7 +88,14 @@ include 'includes/navbar.php';
             <!-- Right Side: Enquiry Form -->
             <div class="lg:w-2/3" data-aos="fade-left">
                 <div class="bg-gray-50 rounded-[3rem] p-8 md:p-16 border border-gray-100">
-                    <form action="process_enquiry.php" method="POST" class="space-y-8">
+                    <?php if($success): ?>
+
+                    <div class="mb-8 bg-green-100 text-green-700 px-6 py-4 rounded-2xl">
+                        Your enquiry has been submitted successfully.
+                    </div>
+
+                    <?php endif; ?>
+                    <form method="POST" class="space-y-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <!-- Name -->
                             <div class="space-y-2">
