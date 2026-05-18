@@ -22,6 +22,11 @@ $totalRevenue = $pdo->query("
     SELECT SUM(amount) FROM transactions WHERE status = 'success'
 ")->fetchColumn();
 
+/* EXPENSES METRIC */
+$totalExpenses = $pdo->query("
+    SELECT SUM(amount) FROM expenses
+")->fetchColumn();
+
 /* PAYMENT METHOD BREAKDOWN */
 $methods = $pdo->query("
     SELECT payment_method, COUNT(*) as total
@@ -61,7 +66,7 @@ $referrers = $pdo->query("
     </header>
 
     <!-- Overview Metrics Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
         <!-- Metric Card 1 -->
         <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Users</span>
@@ -89,11 +94,20 @@ $referrers = $pdo->query("
         </div>
 
         <!-- Metric Card 4 -->
+        <!-- Metric Card 4 -->
         <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Revenue</span>
+            <div class="flex flex-col items-start mt-2">
+                <span class="text-3xl font-semibold text-slate-900 leading-none">₹<?php echo $totalRevenue ?? 0; ?></span>
+                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mt-1.5">Membership Segment</span>
+            </div>
+        </div>
+
+        <!-- Metric Card 5: Added Expenses Box -->
+        <div class="bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Expenses</span>
             <div class="flex items-baseline gap-1 mt-2">
-                <span class="text-3xl font-semibold text-slate-900">₹<?php echo $totalRevenue ?? 0; ?></span>
-                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider pl-1">Membership</span>
+                <span class="text-3xl font-semibold text-rose-600">₹<?php echo number_format($totalExpenses ?? 0, 2); ?></span>
             </div>
         </div>
     </div>
@@ -121,7 +135,7 @@ $referrers = $pdo->query("
                             <?php if (empty($transactions)): ?>
                                 <tr>
                                     <td colspan="4" class="py-6 px-5 text-center text-slate-400 italic">No transactions captured.</td>
-                                    </tr>
+                                </tr>
                             <?php else: ?>
                                 <?php foreach ($transactions as $t): ?>
                                 <tr class="hover:bg-slate-50/40 transition-colors duration-150">
