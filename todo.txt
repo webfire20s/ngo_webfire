@@ -238,4 +238,16 @@ Easy updates
 Professional structure
 
 
-
+================================================================================================================================================================================================================================================================================================================================================================================================================================================
+done beyond being an MVP  
+NEXT PHASE
+1. Admin Dashboard Analytics
+2. Website Settings Module
+3. Activities Feed
+4. News Module
+5. Member Dashboard Enhancements
+6. Messaging System
+7. Event Registrations
+8. Reports Export
+9. Beneficiary Module
+10. Payment Gateway Integration

@@ -1,22 +1,42 @@
-<?php 
-// Keeping all your exact file links, key structures, and casing completely untouched
-$nav_items = [
-    'index.php' => 'Home',
-    'campaigns.php' => 'Campaigns',
-    'donate.php' => 'Donate',
-    'members.php' => 'Members',
-    'notices.php' => 'Notices',
-    'events.php' => 'Events',
-    'gallery.php' => 'Gallery',
-    'contact.php' => 'Contact'
-];
+<?php
 
-$dropdown_items = [
-    'about.php' => 'About',
-    'mission.php' => 'Mission',
-    'objectives.php' => 'Objectives',
-    'achievements.php' => 'Achievements'
-];
+require 'includes/db.php';
+
+/* MAIN MENUS */
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM menus
+    WHERE menu_type='main'
+    AND status=1
+    ORDER BY sort_order ASC
+");
+
+$stmt->execute();
+
+$nav_items = [];
+
+while($row = $stmt->fetch()){
+
+    $nav_items[$row['menu_link']] = $row['menu_name'];
+}
+
+/* DROPDOWN MENUS */
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM menus
+    WHERE menu_type='dropdown'
+    AND status=1
+    ORDER BY sort_order ASC
+");
+
+$stmt->execute();
+
+$dropdown_items = [];
+
+while($row = $stmt->fetch()){
+
+    $dropdown_items[$row['menu_link']] = $row['menu_name'];
+}
 ?>
 
 <nav class="fixed top-0 w-full z-[100] bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
@@ -26,7 +46,7 @@ $dropdown_items = [
             <!-- Branding / Logo Area -->
             <div class="flex-shrink-0 flex items-center">
                 <a href="index.php" class="text-2xl font-bold tracking-tighter brand-font">
-                    NGO<span class="text-gray-400">.</span>
+                    Your LOGO<span class="text-gray-400">.</span>
                 </a>
             </div>
 

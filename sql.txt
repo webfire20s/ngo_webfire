@@ -399,3 +399,74 @@ DELETE FROM receipts WHERE amount = 0;
 ALTER TABLE campaigns 
 ADD collected_amount DECIMAL(12,2) DEFAULT 0 AFTER goal_amount;
 
+
+
+
+================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+date = 18 may 
+
+CREATE TABLE pages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    content LONGTEXT,
+    show_in_menu TINYINT(1) DEFAULT 0,
+    menu_type ENUM('main','dropdown') DEFAULT 'main',
+    status TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE menus (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    menu_name VARCHAR(100) NOT NULL,
+    menu_link VARCHAR(255) NOT NULL,
+    sort_order INT DEFAULT 0,
+    status TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO menus (menu_name, menu_link, sort_order) VALUES
+('Home', 'index.php', 1),
+('About Us', 'page.php?slug=about-us', 2),
+('Mission & Vision', 'page.php?slug=mission-vision', 3),
+('Events', 'events.php', 4),
+('Gallery', 'gallery.php', 5),
+('Contact', 'contact.php', 6);
+
+ALTER TABLE menus
+ADD menu_type ENUM('main','dropdown') DEFAULT 'main';
+
+INSERT INTO menus 
+(menu_name, menu_link, menu_type, sort_order)
+VALUES
+
+('Home', 'index.php', 'main', 1),
+('Campaigns', 'campaigns.php', 'main', 2),
+('Donate', 'donate.php', 'main', 3),
+('Members', 'members.php', 'main', 4),
+('Notices', 'notices.php', 'main', 5),
+('Events', 'events.php', 'main', 6),
+('Gallery', 'gallery.php', 'main', 7),
+('Contact', 'contact.php', 'main', 8),
+
+('About', 'page.php?slug=about', 'dropdown', 1),
+('Mission', 'page.php?slug=mission', 'dropdown', 2),
+('Objectives', 'page.php?slug=objectives', 'dropdown', 3),
+('Achievements', 'page.php?slug=achievements', 'dropdown', 4);
+
+UPDATE menus 
+SET menu_link='about.php'
+WHERE menu_name='About';
+
+UPDATE menus 
+SET menu_link='mission.php'
+WHERE menu_name='Mission';
+
+UPDATE menus 
+SET menu_link='objectives.php'
+WHERE menu_name='Objectives';
+
+UPDATE menus 
+SET menu_link='achievements.php'
+WHERE menu_name='Achievements';
